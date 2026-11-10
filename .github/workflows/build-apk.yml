@@ -26,9 +26,9 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
-      - name: Generate icons (jika resources/icon.png ada)
-        if: ${{ hashFiles('resources/icon.png') != '' }}
-        run: npx --yes @capacitor/assets generate --android
+      - name: Generate icons
+        if: ${{ hashFiles('resources/icon-only.png') != '' }}
+        run: npx --yes @capacitor/assets generate --android --assetPath resources --iconBackgroundColor '#ffffff' --iconBackgroundColorDark '#ffffff'
 
       - name: Sync web assets
         run: npx cap sync android
