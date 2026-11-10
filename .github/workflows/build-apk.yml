@@ -1,14 +1,4 @@
-      - name: Pakai kunci tanda tangan tetap
-        env:
-          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
-        run: |
-          if [ -n "$DEBUG_KEYSTORE_B64" ]; then
-            mkdir -p ~/.android
-            echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
-          else
-            echo "Secret belum diisi: APK memakai kunci acak."
-          fi
-          name: Build APK
+name: Build APK
 
 on:
   push:
@@ -42,6 +32,17 @@ jobs:
 
       - name: Sync web assets
         run: npx cap sync android
+
+      - name: Pakai kunci tanda tangan tetap
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$DEBUG_KEYSTORE_B64" ]; then
+            mkdir -p ~/.android
+            echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+          else
+            echo "Secret belum diisi: APK memakai kunci acak."
+          fi
 
       - name: Build debug APK
         working-directory: android
