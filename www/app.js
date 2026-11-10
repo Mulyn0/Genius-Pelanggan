@@ -61,13 +61,13 @@ function login(step, phone) {
   step = step || 'phone'; phone = phone || '';
   const name = S.cfg ? S.cfg.appName : 'GENIUS NET';
   $('#root').innerHTML = `<main class="login"><div class="logo">G</div><h1>${esc(name)}</h1><p class="mut">Pantau layanan dan tagihan internet Anda</p>` + (step === 'phone'
-    ? `<label>Nomor WhatsApp<input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" value="${esc(phone)}"></label><button class="btn" id="go">Kirim kode</button>`
-    : `<p>Kode 6 digit dikirim ke WhatsApp <b>${esc(phone)}</b>.</p><label>Kode OTP<input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></label><button class="btn" id="go">Masuk</button><button class="ghost" id="re"></button><button class="ghost" id="bk">Ganti nomor</button>`) + '</main>';
+    ? `<label>ID pelanggan, username PPPoE, atau nomor WhatsApp<input id="ph" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" placeholder="Contoh: 08xxxxxxxxxx" value="${esc(phone)}"></label><button class="btn" id="go">Kirim kode</button>`
+    : `<p>Kode 6 digit dikirim ke WhatsApp yang terdaftar untuk <b>${esc(phone)}</b>.</p><label>Kode OTP<input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000"></label><button class="btn" id="go">Masuk</button><button class="ghost" id="re"></button><button class="ghost" id="bk">Ganti akun</button>`) + '</main>';
   const go = $('#go');
   if (step === 'phone') {
     go.onclick = () => run(go, async () => {
       const p = $('#ph').value.trim();
-      if (p.replace(/\D/g, '').length < 9) throw new Error('Nomor WhatsApp tidak valid.');
+      if (p.length < 2) throw new Error('Isi ID pelanggan, username PPPoE, atau nomor WhatsApp.');
       await api('/auth/otp/request', { phone: p }); login('otp', p);
     });
     return;
