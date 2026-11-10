@@ -157,9 +157,16 @@ function payFlow(inv) {
 }
 
 /* ---------- WiFi ---------- */
+function devCard(L) {
+  L = Array.isArray(L) ? L : [];
+  return `<section class="card"><div class="rowx"><h3>Perangkat terhubung</h3><span class="chip ok">${L.length}</span></div>` + (L.length
+    ? `<ul class="dev">${L.map((d) => `<li><div><b>${esc(d.name || 'Perangkat tanpa nama')}</b><small>${esc(d.ip || '-')} · ${esc(d.mac || '-')}</small>${d.signal ? `<small>Sinyal ${esc(d.signal)}</small>` : ''}</div>${d.type ? `<span class="chip">${esc(d.type)}</span>` : ''}</li>`).join('')}</ul>`
+    : '<p class="mut">Tidak ada perangkat terdeteksi saat ini.</p>') + '</section>';
+}
 async function vWifi(v, f, ok) {
   const w = await load('wifi', '/wifi', f); if (!ok()) return;
   v.innerHTML = `<section class="card"><div class="rowx"><h3>Perangkat</h3><span class="chip ${w.online ? 'ok' : 'bad'}">${w.online ? 'Online' : 'Offline'}</span></div><dl><div><dt>Nama WiFi</dt><dd>${esc(w.ssid)}</dd></div><div><dt>Perangkat terhubung</dt><dd>${esc(w.connectedDevices)}</dd></div><div><dt>Sinyal (Rx)</dt><dd>${esc(w.rxPower)}</dd></div><div><dt>Suhu</dt><dd>${esc(w.temperature)}</dd></div></dl></section>`
+    + devCard(w.devices)
     + '<section class="card"><h3>Ganti nama WiFi</h3><input id="ns" maxlength="32" placeholder="Nama WiFi baru" aria-label="Nama WiFi baru"><button class="btn" id="bs">Simpan nama</button></section>'
     + '<section class="card"><h3>Ganti password WiFi</h3><input id="np" type="password" autocomplete="new-password" placeholder="Minimal 8 karakter" aria-label="Password WiFi baru"><button class="btn" id="bp">Simpan password</button></section>'
     + '<section class="card"><h3>Mulai ulang perangkat</h3><p class="mut">Internet terputus sekitar 2 menit.</p><button class="btn warn" id="br">Reboot</button></section>';
