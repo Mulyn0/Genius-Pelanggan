@@ -39,7 +39,9 @@ jobs:
         run: |
           if [ -n "$DEBUG_KEYSTORE_B64" ]; then
             mkdir -p ~/.android
-            echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+            printf '%s' "$DEBUG_KEYSTORE_B64" | tr -d '[:space:]' | base64 -d > ~/.android/debug.keystore
+            keytool -list -keystore ~/.android/debug.keystore -storepass android > /dev/null
+            echo "Kunci tetap valid dan dipakai."
           else
             echo "Secret belum diisi: APK memakai kunci acak."
           fi
